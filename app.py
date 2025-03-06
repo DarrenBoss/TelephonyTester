@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, send_from_directory
 import json
 from datetime import datetime
 
@@ -145,3 +145,29 @@ def dashboard_data():
     except Exception as e:
         logger.error(f"Error fetching dashboard data: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/static/audio/<filename>')
+def serve_audio(filename):
+    """Serve audio files for Twilio."""
+    if filename.endswith('.mp3.txt'):
+        # If requesting the placeholder txt file
+        return send_from_directory('static/audio', filename)
+    
+    # For actual MP3 files, check if they exist
+    if os.path.exists(os.path.join('static/audio', filename)):
+        return send_from_directory('static/audio', filename)
+    
+    # If requested MP3 doesn't exist but we have a placeholder, use Twilio's demos
+    placeholder = f"{filename}.txt"
+    if os.path.exists(os.path.join('static/audio', placeholder)):
+        if filename == 'beep.mp3':
+            return Response("Redirecting to Twilio demo beep", 
+                          headers={"Location": "https://demo.twilio.com/docs/classic.mp3"}, 
+                          status=302)
+        elif filename == 'music.mp3':
+            return Response("Redirecting to Twilio demo music", 
+                          headers={"Location": "https://demo.twilio.com/docs/classic.mp3"}, 
+                          status=302)
+    
+    # File not found
+    return Response("Audio file not found", status=404)
