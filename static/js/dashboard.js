@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the call chart
     initializeCallChart();
     
-    // Initialize real-time updates
-    initializeEventSource();
-    
     // Initial data load
     fetchInitialData();
+    
+    // Start polling for updates
+    setInterval(fetchDashboardData, 3000);
 });
 
 // Initialize the call history chart
@@ -47,45 +47,21 @@ function initializeCallChart() {
     });
 }
 
-// Set up server-sent events for real-time updates
-function initializeEventSource() {
-    const eventSource = new EventSource('/api/stream');
-    
-    eventSource.addEventListener('message', function(event) {
-        const data = JSON.parse(event.data);
-        updateDashboard(data);
-    });
-    
-    eventSource.addEventListener('error', function(error) {
-        console.error('EventSource error:', error);
-        // Attempt to reconnect after a delay
-        setTimeout(() => {
-            console.log('Attempting to reconnect EventSource...');
-            initializeEventSource();
-        }, 5000);
-    });
-}
+// No longer using EventSource - removed initializeEventSource function
 
 // Fetch initial data for the dashboard
 function fetchInitialData() {
-    // Get active calls
-    fetch('/api/calls')
+    fetchDashboardData();
+}
+
+// Fetch dashboard data using our new combined endpoint
+function fetchDashboardData() {
+    fetch('/api/dashboard_data')
         .then(response => response.json())
-        .then(calls => {
-            // Get call count
-            fetch('/api/call_count')
-                .then(response => response.json())
-                .then(countData => {
-                    // Update dashboard with initial data
-                    updateDashboard({
-                        calls: calls,
-                        count: countData.count,
-                        timestamp: new Date().toISOString()
-                    });
-                })
-                .catch(error => console.error('Error fetching call count:', error));
+        .then(data => {
+            updateDashboard(data);
         })
-        .catch(error => console.error('Error fetching calls:', error));
+        .catch(error => console.error('Error fetching dashboard data:', error));
 }
 
 // Update the dashboard with new data

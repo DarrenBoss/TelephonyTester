@@ -155,25 +155,19 @@ def api_call_count():
         logger.error(f"Error fetching call count: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-# SSE route for real-time updates
-@app.route('/api/stream')
-def stream():
-    def event_stream():
-        previous_count = -1
-        while True:
-            count = get_call_count()
-            calls = get_active_calls()
-            
-            # Only send updates when there's a change
-            if count != previous_count:
-                previous_count = count
-                data = {
-                    "count": count,
-                    "calls": calls,
-                    "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                }
-                yield f"data: {json.dumps(data)}\n\n"
-            
-            time.sleep(1)
-    
-    return Response(event_stream(), mimetype="text/event-stream")
+# Modified API endpoint for dashboard updates - replaces SSE
+@app.route('/api/dashboard_data')
+def dashboard_data():
+    """API endpoint to get dashboard data (calls and count)."""
+    try:
+        count = get_call_count()
+        calls = get_active_calls()
+        data = {
+            "count": count,
+            "calls": calls,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        return jsonify(data)
+    except Exception as e:
+        logger.error(f"Error fetching dashboard data: {str(e)}")
+        return jsonify({"error": str(e)}), 500

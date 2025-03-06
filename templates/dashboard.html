@@ -203,16 +203,23 @@
     
     // Update music and beep call counts
     function updateCallTypeCounts() {
-        const musicCalls = document.querySelectorAll('.ivr-selection:contains("Playing Music")').length;
-        const beepCalls = document.querySelectorAll('.ivr-selection:contains("Playing Beep")').length;
+        // Use standard DOM methods instead of jQuery
+        let musicCalls = 0;
+        let beepCalls = 0;
+        
+        // Get all ivr-selection elements
+        const ivrElements = document.querySelectorAll('.ivr-selection');
+        ivrElements.forEach(element => {
+            const text = element.textContent.trim();
+            if (text.includes('Playing Music')) {
+                musicCalls++;
+            } else if (text.includes('Playing Beep')) {
+                beepCalls++;
+            }
+        });
         
         document.getElementById('music-calls-count').textContent = musicCalls;
         document.getElementById('beep-calls-count').textContent = beepCalls;
     }
-    
-    // Helper function for :contains selector
-    jQuery.expr[':'].contains = function(a, i, m) {
-        return jQuery(a).text().toUpperCase().indexOf(m[3].toUpperCase()) >= 0;
-    };
 </script>
 {% endblock %}
