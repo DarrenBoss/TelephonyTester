@@ -1,0 +1,188 @@
+/* Custom styles for the telephony testing application */
+
+/* Dashboard container */
+.dashboard-container {
+    min-height: 100vh;
+}
+
+/* Call counter */
+.call-counter {
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    transition: color 0.3s ease;
+}
+
+.counter-label {
+    opacity: 0.8;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.capacity-indicator {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+}
+
+/* Call list */
+.calls-list {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.calls-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.calls-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.calls-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
+.calls-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.call-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.call-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Chart container */
+.chart-container {
+    position: relative;
+    height: 250px;
+    margin-top: 1rem;
+}
+
+/* Stats cards */
+.stats-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stats-card.bg-gradient-primary {
+    border-left-color: #3a86ff;
+}
+
+.stats-card.bg-gradient-success {
+    border-left-color: #38b000;
+}
+
+.stats-card.bg-gradient-info {
+    border-left-color: #00a6fb;
+}
+
+/* Status indicators */
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.status-active {
+    background-color: #38b000;
+    box-shadow: 0 0 10px #38b000;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(56, 176, 0, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(56, 176, 0, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(56, 176, 0, 0);
+    }
+}
+
+/* Counter card */
+.counter-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.counter-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at center,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(0, 0, 0, 0) 70%
+    );
+    z-index: 0;
+}
+
+/* Animated background for dashboard */
+.dashboard-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.05;
+    background: linear-gradient(125deg, #111 25%, transparent 25%) -50px 0,
+                linear-gradient(225deg, #111 25%, transparent 25%) -50px 0,
+                linear-gradient(315deg, #111 25%, transparent 25%),
+                linear-gradient(45deg, #111 25%, transparent 25%);
+    background-size: 100px 100px;
+    animation: gradientBackground 15s ease infinite;
+}
+
+@keyframes gradientBackground {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .call-counter {
+        font-size: 3.5rem;
+    }
+    
+    .counter-label {
+        font-size: 0.85rem;
+    }
+    
+    .chart-container {
+        height: 200px;
+    }
+}
