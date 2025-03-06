@@ -1,44 +1,26 @@
 import os
 import logging
 from flask import Flask, render_template, request, jsonify, Response
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase
 import json
-import time
 from datetime import datetime
 
 # Configure logging
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-
-# Setup database
-class Base(DeclarativeBase):
-    pass
-
-db = SQLAlchemy(model_class=Base)
 
 # Create the app
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "telephony-test-app-secret")
 
-# Configure the database
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///telephony.db")
-app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
-    "pool_recycle": 300,
-    "pool_pre_ping": True,
-}
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Initialize the app with the extension
-db.init_app(app)
-
-# Import routes after app initialization to avoid circular imports
-from models import Call
+# Import after app creation to avoid circular imports
 from twilio_utils import generate_twiml_response, get_twilio_client
-from call_handler import handle_call_start, handle_call_end, get_active_calls, get_call_count
-
-with app.app_context():
-    # Create database tables
-    db.create_all()
+from call_handler import (
+    handle_call_start, 
+    handle_call_end, 
+    update_call_ivr,
+    get_active_calls, 
+    get_call_count
+)
 
 @app.route('/')
 def dashboard():
@@ -90,22 +72,14 @@ def handle_ivr():
             response = generate_twiml_response("music")
             
             # Update call record with choice
-            with app.app_context():
-                call = Call.query.filter_by(call_sid=call_sid).first()
-                if call:
-                    call.ivr_selection = "music"
-                    db.session.commit()
+            update_call_ivr(call_sid, "music")
                     
         elif digits == '2':
             # Option 2: Play beep every 3 seconds
             response = generate_twiml_response("beep")
             
             # Update call record with choice
-            with app.app_context():
-                call = Call.query.filter_by(call_sid=call_sid).first()
-                if call:
-                    call.ivr_selection = "beep"
-                    db.session.commit()
+            update_call_ivr(call_sid, "beep")
         else:
             # Invalid option, repeat menu
             response = generate_twiml_response("invalid")
