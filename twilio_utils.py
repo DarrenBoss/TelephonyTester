@@ -13,14 +13,38 @@ def get_twilio_client():
     Returns:
         Client: Initialized Twilio client
     """
-    account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
-    auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+    # Try different possible environment variable names for Twilio credentials
+    possible_sid_names = ['TWILIO_ACCOUNT_SID', 'TWILIO_SID', 'TWILIO_ACCT_SID']
+    possible_token_names = ['TWILIO_AUTH_TOKEN', 'TWILIO_TOKEN', 'TWILIO_AUTH']
+    
+    account_sid = None
+    auth_token = None
+    
+    # Try to find the SID
+    for name in possible_sid_names:
+        if os.environ.get(name):
+            account_sid = os.environ.get(name)
+            logger.info(f"Found Twilio SID using variable: {name}")
+            break
+    
+    # Try to find the auth token
+    for name in possible_token_names:
+        if os.environ.get(name):
+            auth_token = os.environ.get(name)
+            logger.info(f"Found Twilio Auth Token using variable: {name}")
+            break
     
     if not account_sid or not auth_token:
         logger.warning("Twilio credentials not found in environment variables")
+        logger.warning(f"Looked for SID in: {', '.join(possible_sid_names)}")
+        logger.warning(f"Looked for token in: {', '.join(possible_token_names)}")
         return None
     
-    return Client(account_sid, auth_token)
+    try:
+        return Client(account_sid, auth_token)
+    except Exception as e:
+        logger.error(f"Error initializing Twilio client: {str(e)}")
+        return None
 
 def generate_twiml_response(response_type):
     """
