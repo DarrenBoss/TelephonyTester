@@ -74,14 +74,8 @@ def handle_call_end(call_sid):
             db.session.commit()
             logger.info(f"Call ended: {call_sid}")
             
-            # Send SSE event for dashboard update
-            call_count = get_call_count()
-            calls = get_active_calls()
-            sse.publish({
-                "count": call_count,
-                "calls": calls,
-                "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-            }, type='call_update')
+            # Since we're using direct SSE without Redis, no need to publish updates here
+            # The client will poll the SSE endpoint for updates
             
             return call
     
