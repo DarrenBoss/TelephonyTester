@@ -59,8 +59,8 @@ const callChartOptions = {
             annotations: {
                 line1: {
                     type: 'line',
-                    yMin: 20,
-                    yMax: 20,
+                    yMin: 30,
+                    yMax: 30,
                     borderColor: 'rgba(255, 0, 0, 0.5)',
                     borderWidth: 2,
                     borderDash: [6, 6],

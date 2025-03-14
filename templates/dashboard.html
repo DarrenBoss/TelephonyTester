@@ -202,7 +202,7 @@
         mutations.forEach(function(mutation) {
             if (mutation.type === 'characterData' || mutation.type === 'childList') {
                 const count = parseInt(document.getElementById('call-count').textContent);
-                const percentage = Math.round((count / 20) * 100);
+                const percentage = Math.round((count / 30) * 100);
                 
                 // Update progress bar
                 const progressBar = document.getElementById('capacity-progress');

@@ -94,4 +94,4 @@ The application serves audio files from the `static/audio` directory. If audio i
 
 ### Call Limit Reached
 
-The application is configured to handle a maximum of 20 simultaneous calls. If this limit is reached, callers will hear a busy message.
+The application is configured to handle a maximum of 30 simultaneous calls. If this limit is reached, callers will hear a busy message.
