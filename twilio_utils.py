@@ -84,9 +84,7 @@ def generate_twiml_response(response_type):
         response.say("Playing a beep every 3 seconds.")
         base_url = os.environ.get('BASE_URL', 'https://telephony-test-platform.replit.app')
         for _ in range(20):  # Loop for about a minute (20 * 3 seconds)
-            #response.play(f"{base_url}/static/audio/beep.mp3", loop=1)
-            # Play a DTMF tone
-            response.play(digits="w9")
+            response.play(f"{base_url}/static/audio/beep-02.mp3", loop=1)
             response.pause(length=3)
     
     elif response_type == "error":
