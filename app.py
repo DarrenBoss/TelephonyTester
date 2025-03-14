@@ -40,8 +40,8 @@ def incoming_call():
         
         # Check if we can accept more calls
         active_calls = get_call_count()
-        if active_calls >= 20:
-            logger.warning(f"Max calls reached ({active_calls}/20). Rejecting call from {from_number}")
+        if active_calls >= 40:
+            logger.warning(f"Max calls reached ({active_calls}/40). Rejecting call from {from_number}")
             response = generate_twiml_response("busy")
             return Response(str(response), mimetype='text/xml')
         
